@@ -39,8 +39,8 @@ flowchart LR
 
 ```mermaid
 graph TD
-    A[MockPayment] --> B[backend]
-    A[MockPayment] --> C[.gitignore]
+    A[NovaPay] --> B[backend]
+    A[NovaPay] --> C[.gitignore]
     B --> B1[server.js]
     B --> B2[package.json]
     B --> B3[package-lock.json]
@@ -51,7 +51,7 @@ graph TD
 
 **Explanation:**
 
-- MockPayment/ – Root repository folder on GitHub.
+- NovaPay/ – Root repository folder on GitHub.
   * .gitignore – Ignored files for Git (e.g., node_modules/).
   - backend/ – Node.js backend folder containing:
     - server.js – Main Express server with Redis and polling.
@@ -68,10 +68,10 @@ graph TD
 ### 1. Backend (Render)
 
 1. Create a **Web Service** in Render: `NovaPay`
-2. Connect GitHub repository `MockPayment`
+2. Connect GitHub repository `NovaPay`
 3. Environment Variables:
    - `REDIS_URL` → Redis connection string (from Render Key-Value service)
-   - `FRONTEND_URL` → `https://jucorralg.github.io/MockPayment/backend/frontend`
+   - `FRONTEND_URL` → `https://cx-partner.github.io/NovaPay/backend/frontend`
 4. Build Command: `npm install`
 5. Start Command: `node server.js`
 6. Expose port: default `3000`
@@ -83,7 +83,7 @@ graph TD
 1. Push `backend/frontend/index.html` to your GitHub repository
 2. Enable GitHub Pages from the repository settings
 3. URL will be:  
-   `https://jucorralg.github.io/MockPayment/backend/frontend/index.html`
+   `https://cx-partner.github.io/NovaPay/backend/frontend/index.html`
 
 ---
 
@@ -100,16 +100,16 @@ graph TD
 
 ```mermaid
 sequenceDiagram
-    participant Agent as Desktop Agent
+    participant Client as Client App
     participant Backend as NovaPay API
     participant Customer as Customer Frontend (GitHub Pages)
     participant Redis as Redis Session Store
 
-    Agent->>Backend: POST /api/create-session {amount, customerEmail, agentId}
+    Client->>Backend: POST /api/create-session {amount, customerEmail, agentId}
     Backend->>Redis: SET session {amount, agentId, status: pending}
-    Backend-->>Agent: {sessionId, paymentUrl}
+    Backend-->>Client: {sessionId, paymentUrl}
 
-    Agent->>Customer: Send paymentUrl (email/SMS)
+    Client->>Customer: Send paymentUrl (email/SMS)
     Customer->>Customer: Opens payment page
     Customer->>Backend: POST /api/pay {sessionId, cardNumber, cardName, expiry, cvv}
     Backend->>Redis: Update session {status: completed, last4, confirmationCode}
@@ -119,18 +119,18 @@ sequenceDiagram
 ### 2. Desktop Agent Polling for Payment Status
 ```mermaid
 sequenceDiagram
-    participant Agent as Desktop App
+    participant Client as Client App
     participant Backend as NovaPay API
     participant Redis as Redis Session Store
 
     loop Polling every 3-5 sec
-        Agent->>Backend: GET /api/session-status?sessionId=...
+        Client->>Backend: GET /api/session-status?sessionId=...
         Backend->>Redis: GET session
         alt Payment completed
-            Backend-->>Agent: {status: completed, last4, confirmationCode}
-            Agent->>Agent: Stop polling, update UI
+            Backend-->>Client: {status: completed, last4, confirmationCode}
+            Client->>Agent: Stop polling, update UI
         else Payment pending
-            Backend-->>Agent: {status: pending}
+            Backend-->>Client: {status: pending}
         end
     end
 ```
@@ -154,7 +154,7 @@ sequenceDiagram
 ```json
 {
   "sessionId": "bf84e195-1137-4c41-a314-deef150bb5ba",
-  "paymentUrl": "https://jucorralg.github.io/MockPayment/backend/frontend/index.html?sessionId=bf84e195-1137-4c41-a314-deef150bb5ba&amount=100.50"
+  "paymentUrl": "https://cx-partner.github.io/NovaPay/backend/frontend/index.html?sessionId=bf84e195-1137-4c41-a314-deef150bb5ba&amount=100.50"
 }
 ```
 
@@ -213,7 +213,7 @@ let poller;
 function startPolling() {
   poller = setInterval(async () => {
     try {
-      const response = await fetch(`https://novapay-2590.onrender.com/api/session-status?sessionId=${sessionId}`);
+      const response = await fetch(`https://novapay-moeh.onrender.com/api/session-status?sessionId=${sessionId}`);
       const data = await response.json();
 
       if (data.status === 'completed') {
