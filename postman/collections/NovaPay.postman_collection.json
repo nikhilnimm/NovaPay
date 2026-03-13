@@ -1,0 +1,128 @@
+{
+  "info": {
+    "_postman_id": "fc7b1b13-e965-4d87-a583-840b6a76fa5c",
+    "name": "NovaPay",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "HealthCheck",
+      "id": "85685559-1b1c-452e-9634-b93d8481880a",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{ServiceURL}}.onrender.com/health",
+          "protocol": "https",
+          "host": [
+            "{{ServiceURL}}",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Payment Session",
+      "id": "fd7b5c94-46e7-4410-a244-83e1c92c6d21",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 2500,\n  \"customerEmail\": \"jucorral@cisco.com\",\n  \"agentId\": \"agent123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ServiceURL}}.onrender.com/api/create-session",
+          "protocol": "https",
+          "host": [
+            "{{ServiceURL}}",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "create-session"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Payment Status",
+      "id": "9fe233d3-008e-443a-8ab8-9da2f707bf55",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{ServiceURL}}.onrender.com/api/session-status?sessionId=9de71199-058e-4d3d-af10-795359637fd3",
+          "protocol": "https",
+          "host": [
+            "{{ServiceURL}}",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "session-status"
+          ],
+          "query": [
+            {
+              "key": "sessionId",
+              "value": "9de71199-058e-4d3d-af10-795359637fd3",
+              "uuid": "b906667d-4481-4487-ad7f-7333c512bd9f"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Execute Payment",
+      "id": "eae2c8f8-d4c0-4324-9919-e05e5e93f5b2",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"9de71199-058e-4d3d-af10-795359637fd3\",\n  \"amount\": 2500,\n  \"cardNumber\": \"1234123412341234\",\n  \"cardName\": \"John Doe\",\n  \"expiry\": \"12/27\",\n  \"cvv\": \"123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ServiceURL}}.onrender.com/api/pay",
+          "protocol": "https",
+          "host": [
+            "{{ServiceURL}}",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "pay"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "b0f0b5a5-7964-4a4e-a9ef-6bc8e7e9c41b",
+      "key": "ServiceURL",
+      "value": ""
+    }
+  ]
+}
